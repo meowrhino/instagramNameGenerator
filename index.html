@@ -25,12 +25,10 @@
 <body class="class">
 
     <script>
-        /*
-        const body = document.querySelector(".class")
-        body.addEventListener("click", function (e) {
-            nameGeneration();
-        });
-*/
+        const holabondia = "hola bon dia";
+
+        const nameCharLimit = 30;
+        
         document.body.onkeyup = function (e) {
             if (e.code == "Space"
             ) {
@@ -38,15 +36,52 @@
             }
         }
 
+        let name = "";
+        let nameLenght;
+
         function nameGeneration() {
 
-            const nameCharLimit = 30;
+            name = prompt("place your input here").toString();
+            //si el input tiene espacios (" ") hay que darlo por inválido y pedir un string sin espacios
+            //o cambiarlos por barras bajas ("_") 
+            nameLenght = name.length;
+            
+            const spacesToFill = nameCharLimit - nameLenght;
+            const fillingSpaces = randomNumber(spacesToFill);
 
-            let name = prompt("place your input here");
+            for (i = 0; i < 1; i++) {
+                let part1 
+                
+            }
 
-            let nameLenght = +name.lenght;
 
-            console.log(+name.lenght);
+
+            const name_updated = addUnderscores(fillingSpaces) + name;    
+    
+            console.log(name_updated);
+            //igual luego puedes conseguir que en lugar de que sea fillingSpaces0, fillingSpaces1, ... que sea un bucle y ya
+            
+
+        }
+
+
+        function addUnderscores (amount) {
+            underscoresString = "";
+            console.log ("addUnderscores() was activated")
+            console.log ("addUnderscores() amount is" + amount)
+
+
+            for (i = 0; i < amount; i++) {
+                const underscore = "_"
+                underscoresString += underscore;
+                console.log ("loop" + i);
+            }
+            return underscoresString;
+        }
+
+        function randomNumber (limit) {
+            var n = Math.floor(Math.random() * limit);
+            return n;
         }
 
         /*
