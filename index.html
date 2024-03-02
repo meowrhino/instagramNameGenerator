@@ -28,7 +28,7 @@
         const holabondia = "hola bon dia";
 
         const nameCharLimit = 30;
-        
+
         document.body.onkeyup = function (e) {
             if (e.code == "Space"
             ) {
@@ -45,135 +45,57 @@
             //si el input tiene espacios (" ") hay que darlo por inválido y pedir un string sin espacios
             //o cambiarlos por barras bajas ("_") 
             nameLenght = name.length;
-            
-            const spacesToFill = nameCharLimit - nameLenght;
-            const fillingSpaces = randomNumber(spacesToFill);
 
-            for (i = 0; i < 1; i++) {
-                let part1 
-                
-            }
+            const spacesToFill1 = nameCharLimit - nameLenght;
+            const fillingSpaces1 = randomNumber(spacesToFill1);
 
-
-
-            const name_updated = addUnderscores(fillingSpaces) + name;    
-    
-            console.log(name_updated);
+            const name_updated1 = addUnderscores(fillingSpaces1) + name;
             //igual luego puedes conseguir que en lugar de que sea fillingSpaces0, fillingSpaces1, ... que sea un bucle y ya
+            //por ahora puedes hacer varios 1, 2, 3 y así porque es un poco lio
+            console.log(name_updated1);
+
+
+
+            const spacesToFill2 = nameCharLimit - name_updated1.length;
+            const fillingSpaces2 = randomNumber(spacesToFill2);
+
+            const whereToPutFillingSpaces2 = fillingSpaces1 + 1;
+
+            console.log(whereToPutFillingSpaces2);
+            //TE QUEDASTE AQUÍ
+            //TIENES: el string con las primeras barras bajas
+            //y la posición de donde han de ir las 2as barras bajas en el siguiente paso
+            //lo que tienes que hacer ahora es vercómo cóño puedes meter las barras bajas en ese lugar
+            //o sea, seria introducir fillingSpaces en el index donde te dice whereToPutFillingSpaces2 de name_updated1
+
+            //addUnderscores(fillingSpaces2) 
+
+            console.log("spacesToFill2 = " + spacesToFill2)
+
             
 
         }
 
 
-        function addUnderscores (amount) {
+        function addUnderscores(amount) {
             underscoresString = "";
-            console.log ("addUnderscores() was activated")
-            console.log ("addUnderscores() amount is" + amount)
+            console.log("addUnderscores() was activated")
+            console.log("addUnderscores() amount is" + amount)
 
 
             for (i = 0; i < amount; i++) {
                 const underscore = "_"
                 underscoresString += underscore;
-                console.log ("loop" + i);
+                console.log("loop" + i);
             }
             return underscoresString;
         }
 
-        function randomNumber (limit) {
+        function randomNumber(limit) {
             var n = Math.floor(Math.random() * limit);
             return n;
         }
 
-        /*
-        creadoror de @. con tu nombre/palabra clave
-        con espacios entre letras
-        coje el string
-        calcula su lenght
-        (if nombre compuesto - mal solo nombres simplew, seria verificar si el string tiene caracteres vacios (" ")
-        
-        podria dar uan opcion de proceed anyway que activaria una runxion que recibe ese string le quira los espacios con crop y lo devuelve
-        
-        y luego prueba a multiplicar
-        en plan 
-        resultado = string de antes.lenght
-        y miras como calculas el maximo de caracters de insta y lo divides entre el string lenght y calculas cuantos espacios totales se pueden rellenar
-        entonces le haces un ! a ese reeultado
-        - [ ] o sea la operacion matmatixa
-        - [ ] que calculas el ratio mas divertido de numeros que lo suman
-        p. ej suponiwndo que el mazimo del @ son 20 caracteres
-        introduzco "manu"
-        manu.lenght = 4
-        20-4
-        (porque son los obligatorios en el resultado)
-        
-        y ahora un random numero natural entre 1 y ese numero
-        y lo guarda
-        
-        si ese nunero es, por ejemploe n ese ejemplo, sale 16
-        que seria el maximo
-        seria solo 1 unifad de resultado
-        entonce shabria solo una _____
-        y seria m_____________anu
-        
-        y ya
-        
-        si el resultado es por ejemplo 13
-        y luego 3
-        serian 2 unidades de resultados 
-        y te haria p.ej (lo haria random separando el string en sus cuarro strings
-        y hace un random si si o si no
-        si sale que si
-        pues añade 13 espacios en blanco entre la m y la a y 
-        
-        y recompone el string asi:
-        m___________a n u
-        
-        y ahora sale en el random boolean para el siguiente que no
-        entonces recompone el string asi
-        m___________an u
-        
-        y ahora al 3o dice que si
-        pues añade ese 2o numero de _ entee la n y la u
-        quedabdo asi
-        m___________an___u
-        
-        si al final por algun motivo el resultado de toda eara paja no es el maximod eninsta
-        
-        (if number(stringresultante) !=== maximo.deinsta
-        
-        si no lo es, resra ese maximo de insta al stringresulranre.lenght
-        
-        y ese resulrado son 3
-        y añade 3 _ al final
-        
-        quedando asi: m________an___u___
-        y ahora si que deberia pasar que
-        (number(stringresultante) === maximodeinsta"
-        
-        y si no, tienes un problema
-        
-        
-        
-        
-        
-        ----- 
-        tambien puede see maa facil
-        si es cera
-        y el amximo son 20
-        sera 16 espacios en blanco
-        
-        wntonces un numero random
-        entre 0 y 16
-        si sale cero, salta, 
-        si sale 16 hace
-        c_________era
-        porque 16 +cera.lenght === maximo
-        
-        çero me tusta mas el
-        boolean creo
-        es mas diertido
-        habea mas variedad
-        */
     </script>
 </body>
 
