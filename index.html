@@ -25,13 +25,14 @@
 <body class="class">
 
     <script>
-        const holabondia = "hola bon dia";
+        const holabondia = "holaBonDia";
 
         const nameCharLimit = 30;
 
         document.body.onkeyup = function (e) {
             if (e.code == "Space"
             ) {
+                console.clear();
                 nameGeneration();
             }
         }
@@ -40,55 +41,74 @@
         let nameLenght;
 
         function nameGeneration() {
+            /*NOTAS PARA EL FUTURO: si el input tiene espacios (" ") hay que darlo por inválido y pedir un string sin espacios o cambiarlos por barras bajas ("_")*/
 
-            name = prompt("place your input here").toString();
-            //si el input tiene espacios (" ") hay que darlo por inválido y pedir un string sin espacios
-            //o cambiarlos por barras bajas ("_") 
-            nameLenght = name.length;
+            //name = prompt("place your input here").toString();
+            name = holabondia;
 
-            const spacesToFill1 = nameCharLimit - nameLenght;
+            const spacesToFill1 = nameCharLimit - name.length;
+            console.log("spacesToFill1 = " + spacesToFill1);
+            //te calcula la cantidad de espacios que quedan para rellenar el @ de IG
             const fillingSpaces1 = randomNumber(spacesToFill1);
+            //y te da un numero aleatorio que lo rellenará
 
             const name_updated1 = addUnderscores(fillingSpaces1) + name;
-            //igual luego puedes conseguir que en lugar de que sea fillingSpaces0, fillingSpaces1, ... que sea un bucle y ya
-            //por ahora puedes hacer varios 1, 2, 3 y así porque es un poco lio
-            console.log(name_updated1);
+            console.log("name updated 1 = " + name_updated1);
+            console.log("");
 
 
 
             const spacesToFill2 = nameCharLimit - name_updated1.length;
+            console.log("spacesToFill2 = " + spacesToFill2);
             const fillingSpaces2 = randomNumber(spacesToFill2);
 
             const whereToPutFillingSpaces2 = fillingSpaces1 + 1;
+            const name_updated2 = name_updated1.slice(0, whereToPutFillingSpaces2) + addUnderscores(fillingSpaces2) + name_updated1.slice(whereToPutFillingSpaces2);
+            console.log("name updated 2 = " + name_updated2);
+            console.log("");
 
-            console.log(whereToPutFillingSpaces2);
-            //TE QUEDASTE AQUÍ
-            //TIENES: el string con las primeras barras bajas
-            //y la posición de donde han de ir las 2as barras bajas en el siguiente paso
-            //lo que tienes que hacer ahora es vercómo cóño puedes meter las barras bajas en ese lugar
-            //o sea, seria introducir fillingSpaces en el index donde te dice whereToPutFillingSpaces2 de name_updated1
 
-            //addUnderscores(fillingSpaces2) 
 
-            console.log("spacesToFill2 = " + spacesToFill2)
+            const spacesToFill3 = nameCharLimit - name_updated2.length;
+            console.log("spacesToFill3 = " + spacesToFill3);
+            const fillingSpaces3 = randomNumber(spacesToFill3);
 
-            
+            const whereToPutFillingSpaces3 = fillingSpaces1 + 1 + fillingSpaces2 + 1;
+            const name_updated3 = name_updated2.slice(0, whereToPutFillingSpaces3) + addUnderscores(fillingSpaces3) + name_updated2.slice(whereToPutFillingSpaces3);
+            console.log("name updated 3 = " + name_updated3);
+            console.log("");
 
+
+
+            const spacesToFill4 = nameCharLimit - name_updated3.length;
+            console.log("quedan por rellenar " + spacesToFill4 + " espacios aún :/");
+
+            /*como puedes ver pudiste copiar la de arriba y ya, asi que puedes buclearlo, a ver si lo consigues manuel*/
         }
 
 
         function addUnderscores(amount) {
             underscoresString = "";
-            console.log("addUnderscores() was activated")
-            console.log("addUnderscores() amount is" + amount)
-
+            console.log("addUnderscores() was activated, we will fill " + amount + " spaces")
 
             for (i = 0; i < amount; i++) {
                 const underscore = "_"
                 underscoresString += underscore;
-                console.log("loop" + i);
+                //console.log("loop" + i);
             }
             return underscoresString;
+        }
+
+        function addScores(amount) {
+            scoresString = "";
+            console.log("TEST addScores() was activated, we will fill " + amount + " spaces")
+
+            for (i = 0; i < amount; i++) {
+                const score = "-"
+                scoresString += score;
+                //console.log("loop" + i);
+            }
+            return scoresString;
         }
 
         function randomNumber(limit) {
