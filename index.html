@@ -38,52 +38,69 @@
         }
 
         let name = "";
-        let nameLenght;
+        let spacesToFill;
+        let spacesToBeFilled;
+        let whereToPutSpaces;
 
         function nameGeneration() {
-            /*NOTAS PARA EL FUTURO: si el input tiene espacios (" ") hay que darlo por inválido y pedir un string sin espacios o cambiarlos por barras bajas ("_")*/
+            /*NOTAS PARA EL FUTURO: si el input tiene espacios (" ") hay que darlo por inválido y pedir un string sin espacios o cambiarlos por barras bajas ("_")
+            o directamente ignorar los espacios (" ") y juntartelo todo, creo que hay un string method para ello*/
 
-            //name = prompt("place your input here").toString();
-            name = holabondia;
+            name = prompt("place your input here").toString();
+            //name = holabondia;
 
-            const spacesToFill1 = nameCharLimit - name.length;
-            console.log("spacesToFill1 = " + spacesToFill1);
+            spacesToFill = nameCharLimit - name.length;
+            console.log("spacesToFill = " + spacesToFill);
             //te calcula la cantidad de espacios que quedan para rellenar el @ de IG
-            const fillingSpaces1 = randomNumber(spacesToFill1);
-            //y te da un numero aleatorio que lo rellenará
+            spacesToBeFilled = randomNumber(spacesToFill);
+            //y te da un numero entero aleatorio menor o igual a la cantidad de espacios que lo rellenará
+            /*esto podría ser una funcion pues lo repites aquí !!!*/
 
-            const name_updated1 = addUnderscores(fillingSpaces1) + name;
-            console.log("name updated 1 = " + name_updated1);
+            name = addUnderscores(spacesToBeFilled) + name;
+            console.log("name updated= " + name);
             console.log("");
 
 
 
-            const spacesToFill2 = nameCharLimit - name_updated1.length;
-            console.log("spacesToFill2 = " + spacesToFill2);
-            const fillingSpaces2 = randomNumber(spacesToFill2);
+            console.log("entering FOR LOOP");
 
-            const whereToPutFillingSpaces2 = fillingSpaces1 + 1;
-            const name_updated2 = name_updated1.slice(0, whereToPutFillingSpaces2) + addUnderscores(fillingSpaces2) + name_updated1.slice(whereToPutFillingSpaces2);
-            console.log("name updated 2 = " + name_updated2);
-            console.log("");
+            for (let index = 2; index < nameCharLimit; index++) {
+
+                if (index == 2) {
+
+                    whereToPutSpaces = spacesToBeFilled + index - 1;
+                    console.log("FOR LOOP first stage activated");
+                    console.log("whereToPutSpaces is " + whereToPutSpaces);
+                    i++;
+
+                }
+                /*NOTA PARA EL FUTURO: podrias hacer una update donde en lugar de _ escribes un input
+                para que te lo rellene del caracter queq uieras
+                !!! el input ha de ser solo 1 caracter si no es asi te ha de dar error y focusearte en este input para que lo cambies*/
+
+                //y así ya puedes modificar el spacesToBeFilled sin necesitar 2 variables
+
+                spacesToFill = nameCharLimit - name.length;
+                spacesToBeFilled = randomNumber(spacesToFill);
+                /*esto podría ser una funcion pues lo repites aquí !!! y así pones todos los comments en esa función*/
+
+                name = name.slice(0, whereToPutSpaces) + addUnderscores(spacesToBeFilled) + name.slice(whereToPutSpaces);
+                console.log("FOR LOOP stage number " + index + " new name iteration is " + name);
+                console.log("");
 
 
+                whereToPutSpaces = whereToPutSpaces + spacesToBeFilled + 1;
 
-            const spacesToFill3 = nameCharLimit - name_updated2.length;
-            console.log("spacesToFill3 = " + spacesToFill3);
-            const fillingSpaces3 = randomNumber(spacesToFill3);
+                console.log("name.length is " +name.length)
+                if (name.length == nameCharLimit - 1) {
+                    console.log("name is already " + name.length + " Characters!!!");
 
-            const whereToPutFillingSpaces3 = fillingSpaces1 + 1 + fillingSpaces2 + 1;
-            const name_updated3 = name_updated2.slice(0, whereToPutFillingSpaces3) + addUnderscores(fillingSpaces3) + name_updated2.slice(whereToPutFillingSpaces3);
-            console.log("name updated 3 = " + name_updated3);
-            console.log("");
+                    /*NO ETNIENDO POR QUÉ ES 29 Y NO 30 NO SÉ SI ES ALGO DEL RANDOM O QUÉ COÑO PASA*/
+                    break;
+                }
+            }
 
-
-
-            const spacesToFill4 = nameCharLimit - name_updated3.length;
-            console.log("quedan por rellenar " + spacesToFill4 + " espacios aún :/");
-
-            /*como puedes ver pudiste copiar la de arriba y ya, asi que puedes buclearlo, a ver si lo consigues manuel*/
+            console.log("nameGeneration() has been completed");
         }
 
 
@@ -96,6 +113,7 @@
                 underscoresString += underscore;
                 //console.log("loop" + i);
             }
+
             return underscoresString;
         }
 
@@ -108,6 +126,7 @@
                 scoresString += score;
                 //console.log("loop" + i);
             }
+
             return scoresString;
         }
 
