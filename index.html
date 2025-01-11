@@ -1,190 +1,258 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Random Underscore Generator</title>
+  <meta charset="UTF-8">
+  <title>IG @ generator</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
+    /* ---------------------- */
+    /*        DARK MODE       */
+    /* ---------------------- */
+    html, body {
+      margin: 0; 
       padding: 0;
+      height: 100%;
     }
-
     body {
-      background-color: #f0f2f5;
-      font-family: sans-serif;
+      background-color: #333;
+      /* Patrón de círculos */
+      background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+      background-size: 10px 10px;
+      background-attachment: fixed; /* << Para mantener el fondo fijo */
+      
+      font-family: Arial, sans-serif;
+      color: #f8ecd8; /* Texto claro sobre fondo oscuro */
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
+      justify-content: flex-start;
+      min-height: 100vh;
+      box-sizing: border-box;
     }
-
-    .container {
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      padding: 2rem;
-      text-align: center;
-      width: 300px;
-      max-width: 90%;
-    }
-
     h1 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-      color: #333;
+      margin-top: 40px;
+      text-align: center;
+      font-weight: normal;
     }
 
-    .input-group {
-      margin-bottom: 1rem;
+    /* ---------------------- */
+    /*     CONTENEDOR         */
+    /* ---------------------- */
+    .container {
+      width: 90%;
+      max-width: 600px;
+      margin: 20px auto;
+      text-align: center;
     }
 
-    .input-group label {
-      display: block;
-      text-align: left;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: #555;
+    .input-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 15px;
     }
-
-    .input-group input {
-      width: 100%;
-      padding: 0.5rem;
-      border: 2px solid #ccc;
+    .input-row label {
+      font-weight: bold;
+    }
+    .input-row input[type="text"],
+    .input-row input[type="number"] {
+      padding: 8px;
+      border: 1px solid #666;
       border-radius: 4px;
-      font-size: 1rem;
+      background-color: #444;
+      color: #f8ecd8;
+    }
+    .input-row input[type="number"] {
+      width: 100px;
     }
 
-    button {
-      background: #007bff;
-      color: white;
+    /* ---------------------- */
+    /*     BOTÓN GENERAR      */
+    /* ---------------------- */
+    .btn-generate {
+      background-color: burlywood;
       border: none;
-      padding: 0.7rem 1.2rem;
-      font-size: 1rem;
+      color: #333;
+      padding: 10px 20px;
       border-radius: 4px;
       cursor: pointer;
-      transition: background 0.3s ease;
+      font-size: 1em;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      transition: background-color 0.2s ease;
+    }
+    .btn-generate:hover {
+      background-color: #e0b080;
     }
 
-    button:hover {
-      background: #0056b3;
+    /* ---------------------- */
+    /*   LISTA DE OPCIONES    */
+    /* ---------------------- */
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
     }
-
-    .result {
-      margin-top: 1rem;
-      padding: 0.8rem;
-      background: #eef;
+    .option-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #444;
+      padding: 8px 12px;
       border-radius: 4px;
-      word-break: break-all;
-      font-weight: 600;
-      color: #333;
     }
-
-    .info {
-      font-size: 0.8rem;
-      margin-top: 0.5rem;
-      color: #666;
+    .option-text {
+      font-family: monospace;
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 70%;
+    }
+    .copy-btn {
+      background-color: burlywood;
+      border: none;
+      color: #333;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9em;
+      transition: background-color 0.2s ease;
+    }
+    .copy-btn:hover {
+      background-color: #e0b080;
     }
   </style>
 </head>
 <body>
+  <h1>IG @ generator</h1>
+  
+  <div class="container">
+    <div class="input-row">
+      <label for="baseName">Nombre base:</label>
+      <input type="text" id="baseName" placeholder="Ej: manu" />
+      
+      <label for="numOptions">Opciones:</label>
+      <input type="number" id="numOptions" min="1" max="100" value="5" />
+    </div>
 
-<div class="container">
-  <h1>Underscore Generator</h1>
+    <button class="btn-generate" onclick="generateOptions()">Generar</button>
 
-  <div class="input-group">
-    <label for="nameInput">Enter a word (no spaces)</label>
-    <input id="nameInput" type="text" placeholder="e.g. manu" />
+    <div class="options-list" id="optionsList">
+      <!-- Las opciones generadas aparecerán aquí -->
+    </div>
   </div>
 
-  <button id="generateBtn">Generate</button>
+  <script>
+    const nameCharLimit = 30; // Longitud fija que deseamos
 
-  <div class="result" id="resultBox">Your handle will appear here</div>
-  <div class="info">(Max Instagram handle length: 30 chars)</div>
-</div>
-
-<script>
-  const generateBtn = document.getElementById('generateBtn');
-  const nameInput = document.getElementById('nameInput');
-  const resultBox = document.getElementById('resultBox');
-
-  const nameCharLimit = 30;
-
-  generateBtn.addEventListener('click', () => {
-    // Clear any old messages
-    console.clear();
-
-    let name = nameInput.value.trim();
-
-    // 1) Basic validation: reject if there's a space
-    if (/\s/.test(name)) {
-      resultBox.textContent = "Spaces are not allowed. Try again!";
-      return;
+    // Genera un número aleatorio entre 0 y 'max' (ambos incluidos)
+    function randomNumber(max) {
+      return Math.floor(Math.random() * (max + 1));
     }
 
-    // 2) If user doesn't type anything
-    if (!name) {
-      resultBox.textContent = "Please enter a valid name.";
-      return;
+    // Devuelve un string con 'count' underscores
+    function addUnderscores(count) {
+      return '_'.repeat(count);
     }
 
-    // 3) If the name is already 30+ characters (too long for Instagram)
-    if (name.length >= nameCharLimit) {
-      resultBox.textContent = "This name is already at or above 30 chars.";
-      return;
+    /**
+     * Genera un string de longitud 30 (nameCharLimit),
+     * añadiendo underscores aleatorios al nombre base
+     * hasta completarlo.
+     * Reemplaza espacios por underscores.
+     */
+    function generatePoeticString(base) {
+      // Si el usuario introduce espacios, los sustituimos por '_'
+      base = base.replace(/\s+/g, '_');
+
+      let name = base;
+      while (name.length < nameCharLimit) {
+        const spacesLeft = nameCharLimit - name.length;
+        // Cuántos underscores añadimos (aleatorio entre 0 y spacesLeft)
+        const underscoresToAdd = randomNumber(spacesLeft);
+        // Índice aleatorio para insertar
+        const randomIndex = Math.floor(Math.random() * (name.length + 1));
+        // Inserta
+        name = name.slice(0, randomIndex) + addUnderscores(underscoresToAdd) + name.slice(randomIndex);
+      }
+      // Si por cualquier razón pasa el límite, recortamos
+      if (name.length > nameCharLimit) {
+        name = name.slice(0, nameCharLimit);
+      }
+      return name;
     }
 
-    // Let’s generate underscores for a new handle
-    let handle = randomUnderscoreHandle(name, nameCharLimit);
-
-    // Show result in the box
-    resultBox.textContent = handle;
-    console.log("Final handle:", handle);
-    console.log("Length:", handle.length);
-  });
-
-  /**
-   * Main function that randomly distributes underscores around the given `name`.
-   * Returns a final handle that's up to 30 characters.
-   */
-  function randomUnderscoreHandle(name, maxLen) {
-    let nameLength = name.length;
-    let underscoresToDistribute = maxLen - nameLength;
-
-    // Start with an empty handle
-    let result = name;
-    // We’ll insert underscores in random positions until we approach maxLen
-
-    while (result.length < maxLen) {
-      // pick a random position
-      let pos = Math.floor(Math.random() * (result.length + 1));
-      // pick a random number of underscores (up to the difference)
-      let underscoresThisTime = Math.floor(Math.random() * (underscoresToDistribute + 1));
-
-      // Insert those underscores
-      // slice(0, pos) + underscores + slice(pos)
-      let underscoresStr = "_".repeat(underscoresThisTime);
-      result = result.slice(0, pos) + underscoresStr + result.slice(pos);
-
-      // Update how many underscores we can still add
-      underscoresToDistribute -= underscoresThisTime;
-
-      // If we added 0 underscores this time, it's possible we get stuck in a loop,
-      // so let's break if underscoresThisTime == 0
-      if (underscoresThisTime === 0) break;
-
-      // If we’ve reached or exceeded the limit, break
-      if (result.length >= maxLen) break;
+    // Copia el texto al portapapeles
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          alert('¡Copiado al portapapeles!');
+        })
+        .catch(() => {
+          alert('Error al copiar. Intenta de nuevo.');
+        });
     }
 
-    // If we ended up longer than 30, slice it
-    if (result.length > maxLen) {
-      result = result.slice(0, maxLen);
+    /**
+     * Genera 'quantity' opciones únicas. Si encuentra
+     * una repetida, la descarta e intenta de nuevo
+     * hasta lograr la cantidad pedida (o llegar a
+     * un número de intentos máximos).
+     */
+    function generateUniqueOptions(baseName, quantity) {
+      const uniqueSet = new Set();
+      const results = [];
+      
+      let attempts = 0;
+      const maxAttempts = quantity * 20; 
+      // Máx. 20 intentos por cada opción que pedimos (para evitar bucles infinitos)
+
+      while (results.length < quantity && attempts < maxAttempts) {
+        const candidate = generatePoeticString(baseName);
+        if (!uniqueSet.has(candidate)) {
+          uniqueSet.add(candidate);
+          results.push(candidate);
+        }
+        attempts++;
+      }
+      return results;
     }
 
-    return result;
-  }
-</script>
+    // Genera las opciones y las inyecta en el DOM
+    function generateOptions() {
+      const baseName = document.getElementById('baseName').value.trim() || 'manu';
+      const quantity = parseInt(document.getElementById('numOptions').value, 10) || 5;
+      const optionsContainer = document.getElementById('optionsList');
+      
+      // Limpiamos la lista anterior
+      optionsContainer.innerHTML = '';
 
+      // Generamos 'quantity' opciones únicas
+      const generated = generateUniqueOptions(baseName, quantity);
+
+      generated.forEach(result => {
+        // Creamos el bloque visual
+        const optionItem = document.createElement('div');
+        optionItem.className = 'option-item';
+
+        const optionText = document.createElement('span');
+        optionText.className = 'option-text';
+        optionText.textContent = result;
+
+        const copyButton = document.createElement('button');
+        copyButton.className = 'copy-btn';
+        copyButton.textContent = 'Copiar';
+        copyButton.addEventListener('click', () => {
+          copyToClipboard(result);
+        });
+
+        optionItem.appendChild(optionText);
+        optionItem.appendChild(copyButton);
+        optionsContainer.appendChild(optionItem);
+      });
+    }
+  </script>
 </body>
 </html>
