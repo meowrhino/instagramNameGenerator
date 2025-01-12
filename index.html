@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <title>IG @ generator</title>
@@ -7,20 +8,21 @@
     /* ---------------------- */
     /*        DARK MODE       */
     /* ---------------------- */
-    html, body {
-      margin: 0; 
+    html,
+    body {
+      margin: 0;
       padding: 0;
       height: 100%;
     }
+
     body {
       background-color: #333;
-      /* Patrón de círculos */
       background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
       background-size: 10px 10px;
-      background-attachment: fixed; /* << Para mantener el fondo fijo */
-      
+      background-attachment: fixed;
       font-family: Arial, sans-serif;
-      color: #f8ecd8; /* Texto claro sobre fondo oscuro */
+      color: #f8ecd8;
+      /* Texto claro sobre fondo oscuro */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -28,6 +30,7 @@
       min-height: 100vh;
       box-sizing: border-box;
     }
+
     h1 {
       margin-top: 40px;
       text-align: center;
@@ -51,25 +54,30 @@
       gap: 10px;
       margin-bottom: 15px;
     }
+
     .input-row label {
       font-weight: bold;
     }
+
     .input-row input[type="text"],
-    .input-row input[type="number"] {
+    .input-row input[type="number"],
+    .input-row select {
       padding: 8px;
       border: 1px solid #666;
       border-radius: 4px;
       background-color: #444;
       color: #f8ecd8;
     }
+
     .input-row input[type="number"] {
-      width: 100px;
+      width: 80px;
     }
 
     /* ---------------------- */
-    /*     BOTÓN GENERAR      */
+    /*  BOTONES DE ACCIÓN     */
     /* ---------------------- */
-    .btn-generate {
+    .btn-generate,
+    .btn-ruleta {
       background-color: burlywood;
       border: none;
       color: #333;
@@ -77,11 +85,12 @@
       border-radius: 4px;
       cursor: pointer;
       font-size: 1em;
-      margin-top: 10px;
-      margin-bottom: 20px;
+      margin-top: 5px;
       transition: background-color 0.2s ease;
     }
-    .btn-generate:hover {
+
+    .btn-generate:hover,
+    .btn-ruleta:hover {
       background-color: #e0b080;
     }
 
@@ -93,7 +102,9 @@
       flex-direction: column;
       gap: 8px;
       margin-top: 10px;
+      margin-bottom: 30px;
     }
+
     .option-item {
       display: flex;
       justify-content: space-between;
@@ -102,6 +113,7 @@
       padding: 8px 12px;
       border-radius: 4px;
     }
+
     .option-text {
       font-family: monospace;
       font-size: 14px;
@@ -110,6 +122,7 @@
       text-overflow: ellipsis;
       max-width: 70%;
     }
+
     .copy-btn {
       background-color: burlywood;
       border: none;
@@ -120,64 +133,131 @@
       font-size: 0.9em;
       transition: background-color 0.2s ease;
     }
+
     .copy-btn:hover {
       background-color: #e0b080;
     }
+
+    /* ---------------------- */
+    /*   MENSAJE DE ESTADO    */
+    /* ---------------------- */
+    .status-message {
+      margin-top: 10px;
+      font-size: 0.95em;
+      color: #f8ecd8;
+    }
   </style>
 </head>
+
 <body>
   <h1>IG @ generator</h1>
-  
+
   <div class="container">
+    <!-- FILA DE INPUTS: Nombre base y cantidad de resultados -->
     <div class="input-row">
       <label for="baseName">Nombre base:</label>
       <input type="text" id="baseName" placeholder="Ej: manu" />
-      
+
       <label for="numOptions">Opciones:</label>
       <input type="number" id="numOptions" min="1" max="100" value="5" />
     </div>
 
+    <!-- FILA DE SELECTORES DE CARACTERES DE RELLENO -->
+    <div class="input-row">
+      <label for="fill1">Carácter 1:</label>
+      <select id="fill1"></select>
+
+      <label for="fill2">Carácter 2:</label>
+      <select id="fill2"></select>
+
+      <label for="fill3">Carácter 3:</label>
+      <select id="fill3"></select>
+
+      <button class="btn-ruleta" onclick="ruleta()">Ruleta</button>
+    </div>
+
+    <!-- BOTÓN GENERAR -->
     <button class="btn-generate" onclick="generateOptions()">Generar</button>
 
-    <div class="options-list" id="optionsList">
-      <!-- Las opciones generadas aparecerán aquí -->
-    </div>
+    <!-- LISTADO DE OPCIONES -->
+    <div class="options-list" id="optionsList"></div>
+
+    <!-- MENSAJE DE ESTADO (cuántas generadas, si se ha llegado al máximo, etc.) -->
+    <div class="status-message" id="statusMsg"></div>
   </div>
 
   <script>
     const nameCharLimit = 30; // Longitud fija que deseamos
+    // Lista de caracteres (o secuencias) para que el usuario pueda elegir
+    // Puedes añadir los que quieras
+    const possibleChars = [
+      '_', '*', '^', 'x', 'Xx', 'xX', '~', '-', '+', '@', '#', '$'
+    ];
+
+    // Rellenamos los <select> con las opciones
+    window.addEventListener('DOMContentLoaded', () => {
+      const fill1 = document.getElementById('fill1');
+      const fill2 = document.getElementById('fill2');
+      const fill3 = document.getElementById('fill3');
+
+      // Para cada <select>, metemos las options
+      [fill1, fill2, fill3].forEach((sel) => {
+        possibleChars.forEach((char) => {
+          const opt = document.createElement('option');
+          opt.value = char;
+          opt.textContent = char;
+          sel.appendChild(opt);
+        });
+        // Por defecto, elegimos '_' (si existe en la lista)
+        sel.value = '_';
+      });
+    });
 
     // Genera un número aleatorio entre 0 y 'max' (ambos incluidos)
     function randomNumber(max) {
       return Math.floor(Math.random() * (max + 1));
     }
 
-    // Devuelve un string con 'count' underscores
-    function addUnderscores(count) {
-      return '_'.repeat(count);
+    /**
+     * buildFillString:
+     * Devuelve un string de longitud 'count', donde cada posición
+     * se elige aleatoriamente entre 'fillChars' (array con 3 elementos).
+     */
+    function buildFillString(count, fillChars) {
+      let result = '';
+      for (let i = 0; i < count; i++) {
+        const pick = fillChars[randomNumber(fillChars.length - 1)];
+        result += pick;
+      }
+      return result;
     }
 
     /**
      * Genera un string de longitud 30 (nameCharLimit),
-     * añadiendo underscores aleatorios al nombre base
+     * añadiendo secuencias aleatorias tomadas de fillChars
      * hasta completarlo.
-     * Reemplaza espacios por underscores.
+     * Reemplaza espacios en 'base' por '_'.
      */
-    function generatePoeticString(base) {
+    function generatePoeticString(base, fillChars) {
       // Si el usuario introduce espacios, los sustituimos por '_'
       base = base.replace(/\s+/g, '_');
 
       let name = base;
       while (name.length < nameCharLimit) {
         const spacesLeft = nameCharLimit - name.length;
-        // Cuántos underscores añadimos (aleatorio entre 0 y spacesLeft)
-        const underscoresToAdd = randomNumber(spacesLeft);
-        // Índice aleatorio para insertar
+        // Cuántos "caracteres de relleno" (de 0 a spacesLeft)
+        const howMany = randomNumber(spacesLeft);
+
+        // Creamos esa cadena con buildFillString
+        const fillString = buildFillString(howMany, fillChars);
+
+        // Escogemos índice aleatorio para insertarla
         const randomIndex = Math.floor(Math.random() * (name.length + 1));
-        // Inserta
-        name = name.slice(0, randomIndex) + addUnderscores(underscoresToAdd) + name.slice(randomIndex);
+
+        // Insertamos
+        name = name.slice(0, randomIndex) + fillString + name.slice(randomIndex);
       }
-      // Si por cualquier razón pasa el límite, recortamos
+      // Si nos pasamos, recortamos
       if (name.length > nameCharLimit) {
         name = name.slice(0, nameCharLimit);
       }
@@ -196,28 +276,45 @@
     }
 
     /**
-     * Genera 'quantity' opciones únicas. Si encuentra
-     * una repetida, la descarta e intenta de nuevo
-     * hasta lograr la cantidad pedida (o llegar a
-     * un número de intentos máximos).
+     * Genera 'quantity' opciones únicas. 
+     * Si encuentra una repetida, la descarta e intenta de nuevo
+     * hasta lograr la cantidad pedida (o llegar a 'maxAttempts').
      */
-    function generateUniqueOptions(baseName, quantity) {
+    function generateUniqueOptions(baseName, quantity, fillChars) {
       const uniqueSet = new Set();
       const results = [];
-      
+
       let attempts = 0;
-      const maxAttempts = quantity * 20; 
-      // Máx. 20 intentos por cada opción que pedimos (para evitar bucles infinitos)
+      const maxAttempts = quantity * 50;
+      // Máx. 50 intentos por cada opción que pedimos 
+      // (para evitar bucles infinitos y tener más margen)
 
       while (results.length < quantity && attempts < maxAttempts) {
-        const candidate = generatePoeticString(baseName);
+        const candidate = generatePoeticString(baseName, fillChars);
         if (!uniqueSet.has(candidate)) {
           uniqueSet.add(candidate);
           results.push(candidate);
         }
         attempts++;
       }
-      return results;
+      // Retornamos array con las generadas + 
+      // info de si cumplimos o no
+      return {
+        list: results,
+        exhausted: (results.length < quantity && attempts >= maxAttempts)
+      };
+    }
+
+    // Botón "Ruleta": elige 3 caracteres aleatorios de 'possibleChars'
+    // y los asigna a los 3 <select>.
+    function ruleta() {
+      const fill1 = document.getElementById('fill1');
+      const fill2 = document.getElementById('fill2');
+      const fill3 = document.getElementById('fill3');
+
+      fill1.value = possibleChars[randomNumber(possibleChars.length - 1)];
+      fill2.value = possibleChars[randomNumber(possibleChars.length - 1)];
+      fill3.value = possibleChars[randomNumber(possibleChars.length - 1)];
     }
 
     // Genera las opciones y las inyecta en el DOM
@@ -225,15 +322,22 @@
       const baseName = document.getElementById('baseName').value.trim() || 'manu';
       const quantity = parseInt(document.getElementById('numOptions').value, 10) || 5;
       const optionsContainer = document.getElementById('optionsList');
-      
+      const statusDiv = document.getElementById('statusMsg');
+
+      // Obtenemos los 3 caracteres de relleno elegidos
+      const fill1 = document.getElementById('fill1').value;
+      const fill2 = document.getElementById('fill2').value;
+      const fill3 = document.getElementById('fill3').value;
+
       // Limpiamos la lista anterior
       optionsContainer.innerHTML = '';
+      statusDiv.textContent = '';
 
       // Generamos 'quantity' opciones únicas
-      const generated = generateUniqueOptions(baseName, quantity);
+      const { list, exhausted } = generateUniqueOptions(baseName, quantity, [fill1, fill2, fill3]);
 
-      generated.forEach(result => {
-        // Creamos el bloque visual
+      // Pintamos en pantalla
+      list.forEach(result => {
         const optionItem = document.createElement('div');
         optionItem.className = 'option-item';
 
@@ -252,7 +356,21 @@
         optionItem.appendChild(copyButton);
         optionsContainer.appendChild(optionItem);
       });
+
+      // Mensaje de estado
+      // - list.length = cuántos se generaron
+      // - quantity = cuántos pedía el usuario
+      // - exhausted = true si no pudimos generar más (límite)
+      const generatedCount = list.length;
+      if (exhausted) {
+        statusDiv.textContent =
+          `Se han generado ${generatedCount} de ${quantity} opciones. Ya no hay más combinaciones únicas posibles (o se agotaron los intentos).`;
+      } else {
+        statusDiv.textContent =
+          `Se han generado ${generatedCount} de ${quantity} opciones. ¡Listo!`;
+      }
     }
   </script>
 </body>
+
 </html>
